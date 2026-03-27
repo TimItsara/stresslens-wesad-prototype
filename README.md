@@ -3,6 +3,9 @@
 A WESAD-guided proof-of-concept prototype for wrist-based wearable stress monitoring,
 developed as part of COMP8230 (Mining Unstructured Data) at Macquarie University.
 
+**Author:** Itsara Timaroon (48572918)
+**School of Computing, Macquarie University — Semester 1, 2026**
+
 > **Disclaimer:** This is an academic prototype for monitoring and decision-support
 > demonstration only. It is NOT a clinical diagnostic tool.
 
@@ -17,7 +20,6 @@ pip install -r requirements.txt
 ### 2. Run the application
 
 ```bash
-cd prototype
 streamlit run app.py
 ```
 
@@ -29,9 +31,9 @@ By default, the prototype generates WESAD-inspired synthetic data for demonstrat
 To use real WESAD benchmark data:
 
 1. Download the WESAD dataset from [UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/datasets/WESAD+%28Wearable+Stress+and+Affect+Detection%29)
-2. Extract and place subject folders in `prototype/wesad_data/`:
+2. Extract and place subject folders in `wesad_data/`:
    ```
-   prototype/wesad_data/
+   wesad_data/
    ├── S2/S2.pkl
    ├── S3/S3.pkl
    ├── ...
@@ -42,9 +44,8 @@ To use real WESAD benchmark data:
 ## Project Structure
 
 ```
-prototype/
 ├── app.py                  # Streamlit dashboard (entry point)
-├── data_generator.py       # WESAD loader + synthetic data fallback
+├── data_generator.py       # WESAD loader + synthetic data fallback (30 subjects)
 ├── preprocessing.py        # Signal filtering, normalisation, windowing
 ├── feature_extraction.py   # Statistical feature extraction per window
 ├── model.py                # Random Forest + LOSO cross-validation
