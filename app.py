@@ -152,6 +152,18 @@ with st.sidebar:
             "Semester 1, 2026"
         )
 
+    # Quick LOSO summary in sidebar
+    st.divider()
+    with st.expander("LOSO Quick Summary", expanded=False):
+        _all_feat = get_all_features(subjects)
+        _loso = run_loso_evaluation(_all_feat)
+        st.metric("Overall Accuracy", f"{_loso['overall_accuracy']:.1%}")
+        st.metric("Weighted F1", f"{_loso['overall_f1_weighted']:.1%}")
+        _per_sub = _loso["per_subject"]
+        _min_acc = min(s["accuracy"] for s in _per_sub)
+        _max_acc = max(s["accuracy"] for s in _per_sub)
+        st.caption(f"Range: {_min_acc:.1%} – {_max_acc:.1%} across {len(_per_sub)} subjects")
+
 # ── Main Tabs ────────────────────────────────────────────────────────
 tab1, tab2, tab3, tab4, tab5 = st.tabs([
     "📊 Signal Viewer",
@@ -483,6 +495,16 @@ with tab3:
                               "Stress Likelihood", "Confidence", "Ground Truth"]
 
         st.dataframe(display_df, use_container_width=True, height=300)
+
+        # Download button
+        csv_data = display_df.to_csv(index=False)
+        st.download_button(
+            label="Download Predictions (CSV)",
+            data=csv_data,
+            file_name=f"stresslens_{selected_subject}_predictions.csv",
+            mime="text/csv",
+            icon="📥",
+        )
     else:
         st.warning("No windows available for this subject.")
 
@@ -824,6 +846,16 @@ with tab5:
     )
     st.dataframe(per_sub_df_display, use_container_width=True)
 
+    # Download LOSO results
+    loso_csv = per_sub_df_display.to_csv(index=False)
+    st.download_button(
+        label="Download LOSO Results (CSV)",
+        data=loso_csv,
+        file_name="stresslens_loso_results.csv",
+        mime="text/csv",
+        icon="📥",
+    )
+
     # Classification report
     st.subheader("Classification Report")
     report = loso_results["classification_report"]
@@ -882,3 +914,13 @@ with tab5:
   during daily activities, inconsistent wearing, varying environments,
   and the absence of reliable ground-truth stress labels.
     """)
+
+# ══════════════════════════════════════════════════════════════════════
+# Footer
+# ══════════════════════════════════════════════════════════════════════
+st.divider()
+st.caption(
+    "**StressLens** — Academic prototype for COMP8230 (Mining Unstructured Data), "
+    "Macquarie University. This is a monitoring and decision-support demonstration only — "
+    "**not** a clinical diagnostic tool. · Itsara Timaroon (48572918) · Semester 1, 2026"
+)
